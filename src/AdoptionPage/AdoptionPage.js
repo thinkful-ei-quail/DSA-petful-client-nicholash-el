@@ -13,6 +13,7 @@ export default class AdoptionPage extends React.Component {
   }
   componentDidMount(){
     this.fetchData();
+
   };
   
   fetchData = () => {
@@ -22,6 +23,34 @@ export default class AdoptionPage extends React.Component {
     fetch(`${config.API_ENDPOINT}/api/people`)
     .then(res => res.json())
     .then(res => this.setState({people: res}));
+  }
+  adopted = () => {
+    fetch(`${config.API_ENDPOINT}/api/pets`, {
+      method: 'DELETE',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({type: 'cats'})
+    }).then(() => this.fetchData());
+    fetch(`${config.API_ENDPOINT}/api/pets`, {
+      method: 'DELETE',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({type: 'dogs'})
+    }).then(() => this.fetchData());
+  }
+  
+  petsPeopleAnimation = () => {
+      setInterval(() => {
+        fetch(`${config.API_ENDPOINT}/api/people`, {
+          method: 'DELETE',
+          header: {
+            'content-type': 'application/json',
+          }
+        }).then(() => this.fetchData());
+        this.adopted();
+      }, 5000)
   }
   
   onSubmit = (event) => {
@@ -35,6 +64,7 @@ export default class AdoptionPage extends React.Component {
       },
       body: JSON.stringify({person})
     }).then(() => this.fetchData());
+    this.petsPeopleAnimation();
     
   }
   render(){

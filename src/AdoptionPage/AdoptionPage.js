@@ -1,110 +1,178 @@
 import React from 'react';
 import config from '../config';
 export default class AdoptionPage extends React.Component {
-  constructor(){
+  constructor() {
     super();
     this.state = {
-      people : [],
+      people: [],
       pets: {},
       OK: false,
       fullName: '',
-      currentUser:''
-    }
+      currentUser: '',
+      confirmation: false,
+    };
   }
-  componentDidMount(){
-    this.fetchData();
 
+  componentDidMount() {
+    this.fetchData();
   };
-  
+
   fetchData = () => {
     fetch(`${config.API_ENDPOINT}/api/pets`)
-    .then(res => res.json())
-    .then(res => this.setState({pets: res, OK: true}));
+      .then(res => res.json())
+      .then(res => this.setState({ pets: res, OK: true }));
     fetch(`${config.API_ENDPOINT}/api/people`)
-    .then(res => res.json())
-    .then(res => this.setState({people: res}));
-  }
+      .then(res => res.json())
+      .then(res => this.setState({ people: res }));
+  };
+
   adopted = () => {
     fetch(`${config.API_ENDPOINT}/api/pets`, {
       method: 'DELETE',
       headers: {
         'content-type': 'application/json'
       },
-      body: JSON.stringify({type: 'cats'})
+      body: JSON.stringify({ type: 'cats' })
     }).then(() => this.fetchData());
     fetch(`${config.API_ENDPOINT}/api/pets`, {
       method: 'DELETE',
       headers: {
         'content-type': 'application/json'
       },
-      body: JSON.stringify({type: 'dogs'})
+      body: JSON.stringify({ type: 'dogs' })
     }).then(() => this.fetchData());
-  }
-  
+  };
+
   petsPeopleAnimation = () => {
-      setInterval(() => {
-        fetch(`${config.API_ENDPOINT}/api/people`, {
-          method: 'DELETE',
-          header: {
-            'content-type': 'application/json',
-          }
-        }).then(() => this.fetchData());
-        this.adopted();
-      }, 5000)
-  }
-  
+    let timerId = setInterval(() => {
+      fetch(`${config.API_ENDPOINT}/api/people`, {
+        method: 'DELETE',
+        header: {
+          'content-type': 'application/json',
+        }
+      }).then(() => this.fetchData());
+      this.adopted();
+      if (this.state.people[1] === this.state.currentUser) {
+        clearInterval(timerId);
+        this.addRandomUsers();
+      }
+    }, 5000);
+  };
+
+  addRandomUsers = () => {
+    const randomUsers = [
+      'Ursula K. Le Guin', 'Charles Dickens', 'Michael Jordan', 'Beyoncé', 'Jay-Z', 'Fred', 'Moses', 'Leo Tolstoy', 'Rebel Wilson', 'Susan B. Anthony', 'Fraser', 'Charlie Chaplin', 'Hugo Weaving', 'Charlie Brown', 'Magnesium Sulfate', 'Steve Jobs', 'Willy Wonka', 'Tarzan', 'Karl Marx', 'Margot Robbie'
+    ];
+    let timerId = setInterval(() => {
+      fetch(`${config.API_ENDPOINT}/api/people`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          person: randomUsers[Math.floor((Math.random() * 20))]
+        })
+      }).then(() => this.fetchData());
+      if (this.state.people.length === 4) {
+        clearInterval(timerId);
+      }
+    }, 5000);
+  };
+
   onSubmit = (event) => {
     event.preventDefault();
     let person = this.state.fullName;
-    this.setState({currentUser: person})
+    this.setState({ currentUser: person });
     fetch(`${config.API_ENDPOINT}/api/people`, {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
       },
-      body: JSON.stringify({person})
+      body: JSON.stringify({ person })
     }).then(() => this.fetchData());
     this.petsPeopleAnimation();
-    
-  }
-  render(){
+  };
+
+  handleAdoptCat = () => {
+    fetch(`${config.API_ENDPOINT}/api/pets`, {
+      method: 'DELETE',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ type: 'cats' })
+    }).then(() => this.fetchData());
+    fetch(`${config.API_ENDPOINT}/api/people`, {
+      method: 'DELETE',
+      header: {
+        'content-type': 'application/json',
+      }
+    }).then(() => this.fetchData());
+    this.setState({
+      confirmation: true,
+    });
+  };
+
+  handleAdoptDog = () => {
+    fetch(`${config.API_ENDPOINT}/api/pets`, {
+      method: 'DELETE',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ type: 'dogs' })
+    }).then(() => this.fetchData());
+    fetch(`${config.API_ENDPOINT}/api/people`, {
+      method: 'DELETE',
+      header: {
+        'content-type': 'application/json',
+      }
+    }).then(() => this.fetchData());
+    this.setState({
+      confirmation: true,
+    });
+  };
+
+  render() {
     let catPet = this.state.OK ? this.state.pets.cats[0] : '';
     let dogPet = this.state.OK ? this.state.pets.dogs[0] : '';
-    let people = this.state.OK ?  this.state.people.map((person) => <li>{person}</li>): '';
-    return(
+    let people = this.state.OK ? this.state.people.map((person) => <li>{person}</li>) : '';
+    const { currentUser } = this.state;
+    return (
       <h1>
-        <h1>Next pets in line</h1>
+        <h1>Next Pets Up for Adoption</h1>
+        {this.state.confirmation && <h1>Congratulations on adopting your new pet!</h1>}
         <div className='pets'>
-            <div className='cat'>
-              <img alt ='pet-img'src={catPet.imageURL}/>
-              <h2>{catPet.name}</h2>
-              <p>{catPet.description}</p>
-              <p>{catPet.story}</p>
-              <h4>Gender: {catPet.gender}</h4>
-              <h4>Age: {catPet.age}</h4>
-              <h4>Breed: {catPet.breed}</h4>
-            </div>
-            <div className='dog'>
-               <img alt ='pet-img'src={dogPet.imageURL}/>
-              <h2>{dogPet.name}</h2>
-              <p>{dogPet.description}</p>
-              <p>{dogPet.story}</p>
-              <h4>Gender: {dogPet.gender}</h4>
-              <h4>Age: {dogPet.age}</h4>
-              <h4>Breed: {dogPet.breed}</h4>
+          <div className='cat'>
+            <img alt='pet-img' src={catPet.imageURL} />
+            <h2>{catPet.name}</h2>
+            <p>{catPet.description}</p>
+            <p>{catPet.story}</p>
+            <h4>Gender: {catPet.gender}</h4>
+            <h4>Age: {catPet.age}</h4>
+            <h4>Breed: {catPet.breed}</h4>
+            {(this.state.people[0] === currentUser) && <button onClick={() => this.handleAdoptCat()}>Adopt Me!</button>}
           </div>
-        <div>
-          <h1>Queue of adopters</h1>
-          <ol>{people}</ol>
-         </div>
-        <form onSubmit={this.onSubmit}>
-          <h1>Adoption Form</h1>
-          <label htmlFor='full-name'>Enter Full Name</label>
-          <input onChange={(event) => this.setState({fullName: event.currentTarget.value})} type='text' id='full-name'/>
-          <button>Join Queue</button>
-        </form>
+          <div className='dog'>
+            <img alt='pet-img' src={dogPet.imageURL} />
+            <h2>{dogPet.name}</h2>
+            <p>{dogPet.description}</p>
+            <p>{dogPet.story}</p>
+            <h4>Gender: {dogPet.gender}</h4>
+            <h4>Age: {dogPet.age}</h4>
+            <h4>Breed: {dogPet.breed}</h4>
+            {(this.state.people[0] === currentUser) && <button onClick={() => this.handleAdoptDog()}>Adopt Me!</button>}
+          </div>
+          <div>
+            <h1>Adoption Queue</h1>
+            <ol>{people}</ol>
+          </div>
+          <form onSubmit={this.onSubmit}>
+            <h1>Join Adoption Queue</h1>
+            <label htmlFor='full-name'>Enter Full Name</label>
+            <input onChange={(event) => this.setState({ fullName: event.currentTarget.value })} type='text' id='full-name' />
+            <button>Join</button>
+          </form>
         </div>
       </h1>
-    )
+    );
   }
 }

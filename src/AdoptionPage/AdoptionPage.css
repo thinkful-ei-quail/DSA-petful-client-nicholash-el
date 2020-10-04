@@ -1,0 +1,91 @@
+.adoption-page{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.adoption-page h1{
+  text-align: center;
+  color: olivedrab;
+}
+.pets{
+  display: flex;
+  flex-direction: row;
+  border: 2px solid olivedrab;
+}
+.cat{
+  margin: 1rem;
+}
+.cat img {
+  width: 300px;
+}
+.cat button{
+text-decoration: none;
+  color: white;
+  background: olivedrab;
+  padding: 1rem;
+  border-radius: 15px;
+  letter-spacing: 1px;
+}
+.dog{
+  margin: 1rem;
+}
+.dog button {
+  text-decoration: none;
+  color: white;
+  background: olivedrab;
+  padding: 1rem;
+  border-radius: 15px;
+  letter-spacing: 1px;
+}
+.dog img {
+  width: 300px;
+}
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2px solid olivedrab;
+  padding: 1rem 3rem;
+  margin: 1rem auto;
+  width: 400px;
+}
+form input{
+  margin: .2rem auto .5rem;
+  width: 150px;
+}
+form button {
+  width: 150px;
+}
+.adopters-list{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2px solid olivedrab;
+  margin: 3rem auto;
+  width: 500px;
+}
+@media only screen and (max-device-width: 600px){
+  .pets {
+    display: flex;
+    flex-direction: column;
+  }
+  .adopters-list{
+    width: 300px;
+  }
+  form{
+    width: 300px;
+    padding: 1rem;
+  }
+}
+@media only screen and (max-width: 700px){
+  .pets {
+    flex-direction: column;
+  }
+  form {
+    width: 80vw;
+    padding: 1rem;
+  }
+  .adopters-list{
+    width: 90vw;
+  }
+}

@@ -1,5 +1,6 @@
 import React from 'react';
 import config from '../config';
+import './AdoptionPage.css'
 export default class AdoptionPage extends React.Component {
   constructor() {
     super();
@@ -137,11 +138,12 @@ export default class AdoptionPage extends React.Component {
     let people = this.state.OK ? this.state.people.map((person) => <li>{person}</li>) : '';
     const { currentUser } = this.state;
     return (
-      <h1>
+      <div className='adoption-page'>
         <h1>Next Pets Up for Adoption</h1>
         {this.state.confirmation && <h1>Congratulations on adopting your new pet!</h1>}
         <div className='pets'>
           <div className='cat'>
+            <h1>Cats</h1>
             <img alt='pet-img' src={catPet.imageURL} />
             <h2>{catPet.name}</h2>
             <p>{catPet.description}</p>
@@ -152,6 +154,7 @@ export default class AdoptionPage extends React.Component {
             {(this.state.people[0] === currentUser) && <button onClick={() => this.handleAdoptCat()}>Adopt Me!</button>}
           </div>
           <div className='dog'>
+            <h1>Dogs</h1>
             <img alt='pet-img' src={dogPet.imageURL} />
             <h2>{dogPet.name}</h2>
             <p>{dogPet.description}</p>
@@ -161,18 +164,18 @@ export default class AdoptionPage extends React.Component {
             <h4>Breed: {dogPet.breed}</h4>
             {(this.state.people[0] === currentUser) && <button onClick={() => this.handleAdoptDog()}>Adopt Me!</button>}
           </div>
-          <div>
-            <h1>Adoption Queue</h1>
-            <ol>{people}</ol>
-          </div>
-          <form onSubmit={this.onSubmit}>
-            <h1>Join Adoption Queue</h1>
-            <label htmlFor='full-name'>Enter Full Name</label>
-            <input onChange={(event) => this.setState({ fullName: event.currentTarget.value })} type='text' id='full-name' />
-            <button>Join</button>
-          </form>
         </div>
-      </h1>
+        <div className='adopters-list'>
+          <h1>Adoption Queue</h1>
+          <ol>{people}</ol>
+        </div>
+        <form onSubmit={this.onSubmit}>
+          <h1>Join Adoption Queue</h1>
+          <label htmlFor='full-name'>Enter Full Name</label>
+          <input onChange={(event) => this.setState({ fullName: event.currentTarget.value })} type='text' id='full-name' />
+          <button>Join</button>
+        </form>
+      </div>
     );
   }
 }

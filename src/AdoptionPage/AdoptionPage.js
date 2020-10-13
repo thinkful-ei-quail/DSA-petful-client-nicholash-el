@@ -67,7 +67,7 @@ export default class AdoptionPage extends React.Component {
           clearInterval(timerId);
           console.log('clear animation line 61')
         }
-      }, 5000);
+      }, 500);
     }
 
 
@@ -88,7 +88,7 @@ export default class AdoptionPage extends React.Component {
         if (this.state.people.length > 4) {
           clearInterval(timerId);
         }
-      }, 5000);
+      }, 500);
   };
 
   onSubmit = (event) => {
@@ -146,7 +146,10 @@ export default class AdoptionPage extends React.Component {
   render() {
     let catPet = this.state.OK ? this.state.pets.cats[0] : '';
     let dogPet = this.state.OK ? this.state.pets.dogs[0] : '';
-    let people = this.state.OK ? this.state.people.map((person, i) => <li key={i++}>{person}</li>) : '';
+    let peopleList = [];
+    for(let i = 0; i < 5; i++){
+      peopleList.push(<li key={i}>{this.state.people[i]}</li>)}
+    let people = this.state.OK ?  peopleList : '';
     const { currentUser } = this.state;
     if(this.state.OK === true){
       return (

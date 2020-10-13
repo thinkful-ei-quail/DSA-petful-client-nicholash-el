@@ -19,3 +19,7 @@
 .home a:hover {
   opacity: .9;
 }
+.home p {
+  width: 600px;
+  
+}

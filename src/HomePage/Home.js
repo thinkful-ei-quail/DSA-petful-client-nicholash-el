@@ -14,7 +14,7 @@ export default class Home extends React.Component {
         If the user would like to do so, they may click the adopt button, and that's all it takes!
 There will appear a confirmation banner at the top of the page so the user knows the request was sent and approved.</p>
         <Link to='/adoption'>
-          <a href='/'>START ADOPTION</a>
+          START ADOPTION
         </Link>
       </div>
     );

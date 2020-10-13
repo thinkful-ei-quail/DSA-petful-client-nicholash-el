@@ -3,7 +3,7 @@
 Created by Nicholas Hemerling and El Moctar.
 
 ## Live App
-https://petful.elmoctarebnou.vercel.app/
+https://petful-beta.vercel.app/
 
 ## Summary
 This is Petful: a web application where users can adopt a new pet, super easily.
